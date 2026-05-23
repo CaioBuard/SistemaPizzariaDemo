@@ -132,22 +132,6 @@ docs/screenshots/
 
 ![Tela de motoboys](docs/screenshots/TelaMotoboys.png)
 
-### Lista e Status das Entregas
-
-Espaço reservado para anexar uma imagem da listagem com os botões de saída e finalização.
-
-```markdown
-![Lista de entregas](docs/screenshots/NOME-DA-IMAGEM.png)
-```
-
-### Configurações
-
-Espaço reservado para anexar uma imagem da configuração de limite máximo de entregas por motoboy.
-
-```markdown
-![Configurações](docs/screenshots/NOME-DA-IMAGEM.png)
-```
-
 ## Observações de Segurança
 
 - Não commit o arquivo `appsettings.Local.json`.
