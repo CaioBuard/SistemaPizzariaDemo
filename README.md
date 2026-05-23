@@ -120,44 +120,32 @@ docs/screenshots/
 
 ## Imagens do Sistema
 
-### 1. Painel de Entregas
+### Painel de Entregas
 
-Adicione aqui uma imagem do painel agrupado por bairro e motoboy.
+![Painel de entregas](docs/screenshots/PainelEntregas.png)
+
+### Cadastro de Entregas
+
+![Tela de cadastro de entregas](docs/screenshots/TelaCadastroEntregas.png)
+
+### Cadastro de Motoboys
+
+![Tela de motoboys](docs/screenshots/TelaMotoboys.png)
+
+### Lista e Status das Entregas
+
+Espaço reservado para anexar uma imagem da listagem com os botões de saída e finalização.
 
 ```markdown
-![Painel de entregas](docs/screenshots/01-painel-entregas.png)
+![Lista de entregas](docs/screenshots/NOME-DA-IMAGEM.png)
 ```
 
-### 2. Cadastro de Entregas
+### Configurações
 
-Adicione aqui uma imagem do formulário de cadastro de entregas e da busca no Google Maps.
-
-```markdown
-![Cadastro de entregas](docs/screenshots/02-cadastro-entregas.png)
-```
-
-### 3. Lista e Status das Entregas
-
-Adicione aqui uma imagem da listagem com os botões de saída e finalização.
+Espaço reservado para anexar uma imagem da configuração de limite máximo de entregas por motoboy.
 
 ```markdown
-![Lista de entregas](docs/screenshots/03-lista-entregas.png)
-```
-
-### 4. Cadastro de Motoboys
-
-Adicione aqui uma imagem da tela de motoboys com disponibilidade e exclusão lógica.
-
-```markdown
-![Cadastro de motoboys](docs/screenshots/04-cadastro-motoboys.png)
-```
-
-### 5. Configurações
-
-Adicione aqui uma imagem da configuração de limite máximo de entregas por motoboy.
-
-```markdown
-![Configurações](docs/screenshots/05-configuracoes.png)
+![Configurações](docs/screenshots/NOME-DA-IMAGEM.png)
 ```
 
 ## Observações de Segurança
