@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Baggio Entregas</title>
+    <link rel="icon" type="image/svg+xml" href="~/img/logo-pizzaria.svg" asp-append-version="true" />
+    <link rel="shortcut icon" type="image/svg+xml" href="~/img/logo-pizzaria.svg" asp-append-version="true" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/SistemaPizzariaDemo.styles.css" asp-append-version="true" />
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom shadow-sm">
+            <div class="container-fluid">
+                <a class="navbar-brand d-flex align-items-center gap-2" asp-area="" asp-controller="PainelEntregas" asp-action="Index">
+                    <img src="~/img/logo-pizzaria.svg" alt="Logo da pizzaria" class="app-logo" />
+                    <span>Baggio Entregas</span>
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Alternar navegação">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="PainelEntregas" asp-action="Index">Painel</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Entregas" asp-action="Index">Entregas</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Motoboys" asp-action="Index">Motoboys</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Configuracoes" asp-action="Index">Configurações</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div class="container-fluid px-3 px-lg-4 py-4">
+        <main role="main" class="pb-3">
+            @if (TempData["Mensagem"] is string mensagem)
+            {
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    @mensagem
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fechar"></button>
+                </div>
+            }
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="border-top footer text-muted bg-white">
+        <div class="container-fluid px-3 px-lg-4">
+            <div class="footer-content">
+                <div>
+                    <strong>Baggio Entregas</strong>
+                    <span>&copy; 2026</span>
+                </div>
+                <div class="footer-contact">
+                    <span>Desenvolvido por Caio Buard Casagrande</span>
+                    <a href="https://www.linkedin.com/in/caiobuard" target="_blank" rel="noopener noreferrer">www.linkedin.com/in/caiobuard</a>
+                    <a href="https://github.com/CaioBuard" target="_blank" rel="noopener noreferrer">github.com/CaioBuard</a>
+                    <span>(41) 98767-2491</span>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

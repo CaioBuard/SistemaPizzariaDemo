@@ -1,0 +1,65 @@
+@model IEnumerable<SistemaPizzariaDemo.Models.Motoboy>
+
+@{
+    ViewData["Title"] = "Motoboys";
+}
+
+<div class="page-title">
+    <h1>Motoboys</h1>
+    <a asp-action="Create" class="btn btn-primary">Inserir novo</a>
+</div>
+
+<div class="section-panel">
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>Telefone</th>
+                    <th>Placa</th>
+                    <th>Status</th>
+                    <th class="text-end">Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var motoboy in Model)
+                {
+                    <tr>
+                        <td class="fw-semibold">@motoboy.Nome</td>
+                        <td>@(string.IsNullOrWhiteSpace(motoboy.Telefone) ? "-" : motoboy.Telefone)</td>
+                        <td>@(string.IsNullOrWhiteSpace(motoboy.Placa) ? "-" : motoboy.Placa)</td>
+                        <td>
+                            @if (motoboy.Disponivel)
+                            {
+                                <span class="badge badge-disponivel">Disponível</span>
+                            }
+                            else
+                            {
+                                <span class="badge badge-indisponivel">Não disponível</span>
+                            }
+                        </td>
+                        <td class="actions-cell">
+                            <div class="d-flex justify-content-end gap-2 flex-wrap">
+                                <form asp-action="AlternarDisponibilidade" asp-route-id="@motoboy.Id" method="post">
+                                    <button type="submit" class="btn btn-sm @(motoboy.Disponivel ? "btn-outline-secondary" : "btn-warning")">
+                                        @(motoboy.Disponivel ? "Não disponível" : "Disponível")
+                                    </button>
+                                </form>
+                                <a asp-action="Edit" asp-route-id="@motoboy.Id" class="btn btn-sm btn-outline-primary">Editar</a>
+                                <form asp-action="Excluir" asp-route-id="@motoboy.Id" method="post" onsubmit="return confirm('Confirma a exclusão? O registro será apenas inativado.');">
+                                    <button type="submit" class="btn btn-sm btn-outline-danger">Excluir</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                }
+                @if (!Model.Any())
+                {
+                    <tr>
+                        <td colspan="5" class="text-center text-muted py-4">Nenhum motoboy ativo cadastrado.</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -1,0 +1,70 @@
+@model SistemaPizzariaDemo.ViewModels.PainelEntregasViewModel
+
+@{
+    ViewData["Title"] = "Painel de entregas";
+}
+
+<div class="page-title">
+    <h1>Painel de entregas</h1>
+    <a asp-controller="Entregas" asp-action="Index" class="btn btn-primary">Cadastrar entrega</a>
+</div>
+
+<div class="painel-resumo">
+    <div class="painel-resumo-item">
+        <span>Entregas pendentes</span>
+        <strong>@Model.TotalEntregasPendentes</strong>
+    </div>
+    <div class="painel-resumo-item">
+        <span>Motoboys disponíveis</span>
+        <strong>@Model.TotalMotoboysDisponiveis</strong>
+    </div>
+    <div class="painel-resumo-item">
+        <span>Limite por motoboy</span>
+        <strong>@Model.LimitePorMotoboy</strong>
+    </div>
+</div>
+
+@if (!Model.Grupos.Any())
+{
+    <div class="section-panel text-center text-muted py-5">
+        Nenhuma entrega aguardando saída.
+    </div>
+}
+else
+{
+    foreach (var grupo in Model.Grupos)
+    {
+        <section class="grupo-entrega @grupo.CorClasse">
+            <div class="grupo-header">
+                <div>
+                    <h2>@grupo.MotoboyNome</h2>
+                    <div>@grupo.Bairro - @grupo.Cidade/@grupo.Uf</div>
+                </div>
+                <span>@grupo.Entregas.Count entrega(s)</span>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-sm mb-0">
+                    <thead>
+                        <tr>
+                            <th>Pedido</th>
+                            <th>Pizzas</th>
+                            <th>Endereço</th>
+                            <th>Complemento</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var entrega in grupo.Entregas)
+                        {
+                            <tr>
+                                <td class="fw-semibold">@entrega.NumeroPedido</td>
+                                <td>@entrega.QuantidadePizzas</td>
+                                <td>@entrega.EnderecoFormatado</td>
+                                <td>@(string.IsNullOrWhiteSpace(entrega.Complemento) ? "-" : entrega.Complemento)</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    }
+}

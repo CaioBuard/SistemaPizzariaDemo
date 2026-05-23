@@ -1,0 +1,258 @@
+@using SistemaPizzariaDemo.Models
+@model SistemaPizzariaDemo.ViewModels.EntregaIndexViewModel
+
+@{
+    ViewData["Title"] = "Entregas";
+}
+
+@functions {
+    private static string StatusTexto(EntregaStatus status) => status switch
+    {
+        EntregaStatus.AguardandoSaida => "Aguardando saída",
+        EntregaStatus.SaiuParaEntrega => "Saiu para entrega",
+        EntregaStatus.Finalizada => "Finalizada",
+        _ => status.ToString()
+    };
+
+    private static string StatusClasse(EntregaStatus status) => status switch
+    {
+        EntregaStatus.AguardandoSaida => "status-aguardando",
+        EntregaStatus.SaiuParaEntrega => "status-rota",
+        EntregaStatus.Finalizada => "status-finalizada",
+        _ => "status-finalizada"
+    };
+}
+
+<div class="page-title">
+    <h1>Entregas</h1>
+    <a asp-controller="PainelEntregas" asp-action="Index" class="btn btn-outline-primary">Ver painel</a>
+</div>
+
+<div class="section-panel mb-4">
+    <form id="entrega-form" asp-action="Cadastrar" method="post" class="row g-3">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+        <input asp-for="NovaEntrega.Bairro" type="hidden" />
+        <input asp-for="NovaEntrega.Cidade" type="hidden" />
+        <input asp-for="NovaEntrega.Uf" type="hidden" />
+        <input asp-for="NovaEntrega.Pais" type="hidden" />
+        <input asp-for="NovaEntrega.EnderecoFormatado" type="hidden" />
+        <input asp-for="NovaEntrega.Latitude" type="hidden" />
+        <input asp-for="NovaEntrega.Longitude" type="hidden" />
+
+        <div class="col-md-2">
+            <label asp-for="NovaEntrega.NumeroPedido" class="form-label"></label>
+            <input asp-for="NovaEntrega.NumeroPedido" class="form-control" />
+            <span asp-validation-for="NovaEntrega.NumeroPedido" class="text-danger"></span>
+        </div>
+        <div class="col-md-2">
+            <label asp-for="NovaEntrega.QuantidadePizzas" class="form-label"></label>
+            <input asp-for="NovaEntrega.QuantidadePizzas" class="form-control" min="1" />
+            <span asp-validation-for="NovaEntrega.QuantidadePizzas" class="text-danger"></span>
+        </div>
+        <div class="col-md-3">
+            <label asp-for="NovaEntrega.CidadeSelecionada" class="form-label"></label>
+            <select asp-for="NovaEntrega.CidadeSelecionada" class="form-select">
+                <option value="">Selecione</option>
+                @foreach (var cidade in Model.NovaEntrega.CidadesPermitidas)
+                {
+                    <option value="@cidade.Valor">@cidade.Texto</option>
+                }
+            </select>
+            <span asp-validation-for="NovaEntrega.CidadeSelecionada" class="text-danger"></span>
+        </div>
+        <div class="col-md-3">
+            <label asp-for="NovaEntrega.RuaPesquisada" class="form-label"></label>
+            <input asp-for="NovaEntrega.RuaPesquisada" class="form-control" />
+            <span asp-validation-for="NovaEntrega.RuaPesquisada" class="text-danger"></span>
+        </div>
+        <div class="col-md-2">
+            <label asp-for="NovaEntrega.Numero" class="form-label"></label>
+            <input asp-for="NovaEntrega.Numero" class="form-control" />
+            <span asp-validation-for="NovaEntrega.Numero" class="text-danger"></span>
+        </div>
+        <div class="col-md-5">
+            <label asp-for="NovaEntrega.Complemento" class="form-label"></label>
+            <input asp-for="NovaEntrega.Complemento" class="form-control" />
+            <span asp-validation-for="NovaEntrega.Complemento" class="text-danger"></span>
+        </div>
+        <div class="col-md-7">
+            <label class="form-label">Endereço encontrado no Google Maps</label>
+            <div id="address-preview" class="address-preview">
+                @if (!string.IsNullOrWhiteSpace(Model.NovaEntrega.EnderecoFormatado))
+                {
+                    <strong>Bairro: @Model.NovaEntrega.Bairro</strong>
+                    <div>@Model.NovaEntrega.EnderecoFormatado</div>
+                }
+                else
+                {
+                    <span class="text-muted">Busque o endereço antes de salvar.</span>
+                }
+            </div>
+            <span asp-validation-for="NovaEntrega.Bairro" class="text-danger"></span>
+        </div>
+        <div class="col-12 d-flex gap-2 flex-wrap">
+            <button type="button" id="buscar-endereco" class="btn btn-warning">Buscar no Google Maps</button>
+            <button type="submit" id="salvar-entrega" class="btn btn-primary">Salvar entrega</button>
+        </div>
+    </form>
+</div>
+
+<div class="section-panel">
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+            <thead>
+                <tr>
+                    <th>Pedido</th>
+                    <th>Pizzas</th>
+                    <th>Bairro</th>
+                    <th>Endereço</th>
+                    <th>Status</th>
+                    <th class="text-end">Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var entrega in Model.Entregas)
+                {
+                    <tr>
+                        <td class="fw-semibold">@entrega.NumeroPedido</td>
+                        <td>@entrega.QuantidadePizzas</td>
+                        <td>@entrega.Bairro</td>
+                        <td>
+                            <div>@entrega.EnderecoFormatado</div>
+                            @if (!string.IsNullOrWhiteSpace(entrega.Complemento))
+                            {
+                                <div class="muted-small">@entrega.Complemento</div>
+                            }
+                        </td>
+                        <td>
+                            <span class="status-pill @StatusClasse(entrega.Status)">@StatusTexto(entrega.Status)</span>
+                        </td>
+                        <td class="actions-cell">
+                            <div class="d-flex justify-content-end gap-2 flex-wrap">
+                                @if (entrega.Status == EntregaStatus.AguardandoSaida)
+                                {
+                                    <form asp-action="MarcarSaida" asp-route-id="@entrega.Id" method="post">
+                                        <button type="submit" class="btn btn-sm btn-warning">Saiu para entrega</button>
+                                    </form>
+                                }
+                                @if (entrega.Status != EntregaStatus.Finalizada)
+                                {
+                                    <form asp-action="Finalizar" asp-route-id="@entrega.Id" method="post">
+                                        <button type="submit" class="btn btn-sm btn-outline-success">Finalizar</button>
+                                    </form>
+                                }
+                            </div>
+                        </td>
+                    </tr>
+                }
+                @if (!Model.Entregas.Any())
+                {
+                    <tr>
+                        <td colspan="6" class="text-center text-muted py-4">Nenhuma entrega cadastrada.</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+    <script>
+        (() => {
+            const form = document.getElementById('entrega-form');
+            const buscar = document.getElementById('buscar-endereco');
+            const salvar = document.getElementById('salvar-entrega');
+            const preview = document.getElementById('address-preview');
+            const token = form.querySelector('input[name="__RequestVerificationToken"]');
+            const cidade = document.getElementById('NovaEntrega_CidadeSelecionada');
+            const rua = document.getElementById('NovaEntrega_RuaPesquisada');
+            const numero = document.getElementById('NovaEntrega_Numero');
+
+            const fields = {
+                bairro: document.getElementById('NovaEntrega_Bairro'),
+                cidade: document.getElementById('NovaEntrega_Cidade'),
+                uf: document.getElementById('NovaEntrega_Uf'),
+                pais: document.getElementById('NovaEntrega_Pais'),
+                endereco: document.getElementById('NovaEntrega_EnderecoFormatado'),
+                latitude: document.getElementById('NovaEntrega_Latitude'),
+                longitude: document.getElementById('NovaEntrega_Longitude')
+            };
+
+            const setSalvarState = () => {
+                salvar.disabled = !fields.bairro.value || !fields.endereco.value;
+            };
+
+            const mostrarMensagem = (mensagem, classe) => {
+                preview.replaceChildren();
+                const span = document.createElement('span');
+                span.className = classe;
+                span.textContent = mensagem;
+                preview.appendChild(span);
+            };
+
+            const mostrarEndereco = (bairro, endereco) => {
+                preview.replaceChildren();
+                const strong = document.createElement('strong');
+                strong.textContent = `Bairro: ${bairro}`;
+                const div = document.createElement('div');
+                div.textContent = endereco;
+                preview.append(strong, div);
+            };
+
+            const limparEndereco = () => {
+                Object.values(fields).forEach(field => field.value = '');
+                mostrarMensagem('Busque o endereço antes de salvar.', 'text-muted');
+                setSalvarState();
+            };
+
+            [cidade, rua, numero].forEach(field => field.addEventListener('change', limparEndereco));
+            rua.addEventListener('input', limparEndereco);
+            numero.addEventListener('input', limparEndereco);
+            setSalvarState();
+
+            buscar.addEventListener('click', async () => {
+                const data = new FormData();
+                data.append('__RequestVerificationToken', token.value);
+                data.append('CidadeSelecionada', cidade.value);
+                data.append('RuaPesquisada', rua.value);
+                data.append('Numero', numero.value);
+
+                buscar.disabled = true;
+                buscar.textContent = 'Buscando...';
+                mostrarMensagem('Consultando Google Maps...', 'text-muted');
+
+                try {
+                    const response = await fetch('@Url.Action("BuscarEndereco", "Entregas")', {
+                        method: 'POST',
+                        body: data
+                    });
+                    const result = await response.json();
+
+                    if (!result.sucesso) {
+                        limparEndereco();
+                        mostrarMensagem(result.mensagem ?? 'Endereço não encontrado.', 'text-danger');
+                        return;
+                    }
+
+                    fields.bairro.value = result.bairro ?? '';
+                    fields.cidade.value = result.cidade ?? '';
+                    fields.uf.value = result.uf ?? '';
+                    fields.pais.value = result.pais ?? '';
+                    fields.endereco.value = result.enderecoFormatado ?? '';
+                    fields.latitude.value = result.latitude ?? '';
+                    fields.longitude.value = result.longitude ?? '';
+                    mostrarEndereco(result.bairro, result.enderecoFormatado);
+                    setSalvarState();
+                } catch {
+                    limparEndereco();
+                    mostrarMensagem('Falha ao consultar o Google Maps.', 'text-danger');
+                } finally {
+                    buscar.disabled = false;
+                    buscar.textContent = 'Buscar no Google Maps';
+                }
+            });
+        })();
+    </script>
+}

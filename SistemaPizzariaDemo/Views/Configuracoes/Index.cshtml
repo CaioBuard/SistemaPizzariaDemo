@@ -1,0 +1,29 @@
+@model SistemaPizzariaDemo.ViewModels.ConfiguracaoViewModel
+
+@{
+    ViewData["Title"] = "Configurações";
+}
+
+<div class="page-title">
+    <h1>Configurações</h1>
+</div>
+
+<div class="section-panel">
+    <form asp-action="Index" method="post" class="row g-3">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+        <div class="col-md-4">
+            <label asp-for="MaxEntregasPorMotoboy" class="form-label"></label>
+            <input asp-for="MaxEntregasPorMotoboy" class="form-control" min="1" max="50" />
+            <span asp-validation-for="MaxEntregasPorMotoboy" class="text-danger"></span>
+        </div>
+
+        <div class="col-12">
+            <button type="submit" class="btn btn-primary">Salvar configurações</button>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}
